@@ -45,3 +45,9 @@ module "s3_site" {
 | site_bucket     | [object](https://www.terraform.io/docs/providers/aws/r/s3_bucket.html#attributes-reference)              | The deployed S3 bucket.                                 |
 | cf_distribution | [object](https://www.terraform.io/docs/providers/aws/r/cloudfront_distribution.html#attribute-reference) | The deployed CloudFront distribution.                   |
 | dns_record      | [object](https://www.terraform.io/docs/providers/aws/r/route53_record.html#attributes-reference)         | The DNS A-record mapped to the CloudFront Distribution. |
+
+## Developing
+
+### Release new version
+
+To release a new version, update the examples in the `examples` folder, the example in this README, and the number in the version file. Pushing to `master` will automatically create a new release and tag in GitHub.
