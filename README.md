@@ -12,7 +12,7 @@ This Terraform module deploys an S3-hosted static site with HTTPS enabled.
 ## Usage
 ```hcl
 module "s3_site" {
-  source    = "github.com/byu-oit/terraform-aws-s3staticsite?ref=v4.0.1"
+  source    = "github.com/byu-oit/terraform-aws-s3staticsite?ref=v5.0.0"
   site_url       = "my-site.byu.edu"
   hosted_zone_id = "zoneid"
   s3_bucket_name = "bucket-name"
@@ -33,7 +33,6 @@ module "s3_site" {
 | hosted_zone_id         | string      | Hosted Zone ID                                                                    |
 | index_doc              | string      | The index document of the site.                                                   | index.html     |
 | error_doc              | string      | The error document (e.g. 404 page) of the site.                                   | index.html     |
-| origin_path            | string      | The path to the file in the S3 bucket (no trailing slash).                        | *Empty string* |
 | site_url               | string      | The URL for the site.                                                             |
 | wait_for_deployment    | string      | Define if Terraform should wait for the distribution to deploy before completing. | `true`         |
 | s3_bucket_name         | string      | Name of S3 bucket for the website                                                 |

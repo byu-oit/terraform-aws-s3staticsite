@@ -40,18 +40,18 @@ resource "aws_route53_record" "cert_validation" {
   ttl      = 60
 }
 
+resource "aws_cloudfront_origin_access_identity" "oai" {
+  comment = var.origin_path
+}
+
 resource "aws_cloudfront_distribution" "cdn" {
   price_class = var.cloudfront_price_class
   origin {
-    domain_name = aws_s3_bucket.website.website_endpoint
+    domain_name = aws_s3_bucket.website.bucket_regional_domain_name
     origin_id   = aws_s3_bucket.website.bucket
-    origin_path = var.origin_path
 
-    custom_origin_config {
-      http_port              = 80
-      https_port             = 443
-      origin_protocol_policy = "http-only"
-      origin_ssl_protocols   = ["TLSv1.2"]
+    s3_origin_config {
+      origin_access_identity = aws_cloudfront_origin_access_identity.oai.cloudfront_access_identity_path
     }
   }
 
@@ -154,7 +154,7 @@ data "aws_iam_policy_document" "static_website" {
     resources = ["${aws_s3_bucket.website.arn}/*"]
 
     principals {
-      identifiers = ["*"]
+      identifiers = [aws_cloudfront_origin_access_identity.oai.iam_arn]
       type        = "AWS"
     }
   }
