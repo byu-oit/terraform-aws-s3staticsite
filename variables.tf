@@ -5,8 +5,8 @@ variable "index_doc" {
 }
 
 variable "encryption_key_id" {
-  type = string
-  default = "aws/s3"
+  type        = string
+  default     = ""
   description = "The AWS KMS master key ID used for the SSE-KMS encryption."
 }
 

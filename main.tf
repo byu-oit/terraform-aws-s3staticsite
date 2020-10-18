@@ -115,6 +115,10 @@ resource "aws_route53_record" "custom_url_4a" {
   }
 }
 
+data "aws_kms_key" "default_s3_key" {
+  key_id = "alias/aws/s3"
+}
+
 resource "aws_s3_bucket" "website" {
   bucket = var.s3_bucket_name
   tags   = var.tags
@@ -133,8 +137,8 @@ resource "aws_s3_bucket" "website" {
   server_side_encryption_configuration {
     rule {
       apply_server_side_encryption_by_default {
-        sse_algorithm = "aws:kms"
-        kms_master_key_id = var.encryption_key_id
+        sse_algorithm     = "aws:kms"
+        kms_master_key_id = var.encryption_key_id == "" ? data.aws_kms_key.default_s3_key.id : var.encryption_key_id
       }
     }
   }
@@ -164,19 +168,20 @@ data "aws_iam_policy_document" "static_website" {
   }
 
   statement {
-    effect = "Deny"
-    actions = ["s3:GetObject"]
+    sid       = "2"
+    effect    = "Deny"
+    actions   = ["s3:GetObject"]
     resources = ["${aws_s3_bucket.website.arn}/*"]
 
     condition {
-      test = "Bool"
-      values = ["false"]
+      test     = "Bool"
+      values   = ["false"]
       variable = "aws:SecureTransport"
     }
 
     principals {
       identifiers = ["*"]
-      type = "*"
+      type        = "*"
     }
   }
 }

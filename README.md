@@ -32,7 +32,7 @@ module "s3_site" {
 | ---------------------- | ----------- | --------------------------------------------------------------------------------- | -------------- |
 | hosted_zone_id         | string      | Hosted Zone ID                                                                    |
 | index_doc              | string      | The index document of the site.                                                   | index.html     |
-| encryption_key_id      | string      | The AWS KMS master key ID used for the SSE-KMS encryption                         | aws/s3
+| encryption_key_id      | string      | The AWS KMS master key ID used for the SSE-KMS encryption                         | 
 | site_url               | string      | The URL for the site.                                                             |
 | wait_for_deployment    | string      | Define if Terraform should wait for the distribution to deploy before completing. | `true`         |
 | s3_bucket_name         | string      | Name of S3 bucket for the website                                                 |
