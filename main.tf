@@ -46,6 +46,7 @@ resource "aws_cloudfront_origin_access_identity" "oai" {
 
 resource "aws_cloudfront_distribution" "cdn" {
   price_class = var.cloudfront_price_class
+
   origin {
     domain_name = aws_s3_bucket.website.bucket_regional_domain_name
     origin_id   = aws_s3_bucket.website.bucket
@@ -60,6 +61,11 @@ resource "aws_cloudfront_distribution" "cdn" {
   is_ipv6_enabled     = true
   default_root_object = var.index_doc
   aliases             = [var.site_url]
+
+  logging_config {
+    bucket          = aws_s3_bucket.logging.bucket_domain_name
+    include_cookies = var.log_cookies
+  }
 
   default_cache_behavior {
     target_origin_id = aws_s3_bucket.website.bucket
@@ -189,4 +195,32 @@ data "aws_iam_policy_document" "static_website" {
 resource "aws_s3_bucket_policy" "static_website_read" {
   bucket = aws_s3_bucket.website.id
   policy = data.aws_iam_policy_document.static_website.json
+}
+
+resource "aws_s3_bucket" "logging" {
+  bucket = "${var.site_url}-access-logs"
+  tags   = var.tags
+
+  lifecycle_rule {
+    id      = "logs"
+    enabled = true
+
+    transition {
+      storage_class = "STANDARD_IA"
+      days          = 120
+    }
+
+    expiration {
+      days = 180
+    }
+  }
+
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        sse_algorithm     = "aws:kms"
+        kms_master_key_id = var.encryption_key_id == "" ? data.aws_kms_key.default_s3_key.id : var.encryption_key_id
+      }
+    }
+  }
 }

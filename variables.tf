@@ -48,3 +48,9 @@ variable "cors_rules" {
   default     = []
   description = "cors policy rules"
 }
+
+variable "log_cookies" {
+  type        = bool
+  default     = false
+  description = "Include cookies in the CloudFront access logs."
+}
