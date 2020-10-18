@@ -41,7 +41,7 @@ resource "aws_route53_record" "cert_validation" {
 }
 
 resource "aws_cloudfront_origin_access_identity" "oai" {
-  comment = var.origin_path
+  comment = var.site_url
 }
 
 resource "aws_cloudfront_distribution" "cdn" {
@@ -91,7 +91,7 @@ resource "aws_cloudfront_distribution" "cdn" {
   tags                = var.tags
 }
 
-resource "aws_route53_record" "custom-url-a" {
+resource "aws_route53_record" "custom_url_a" {
   name    = var.site_url
   type    = "A"
   zone_id = var.hosted_zone_id
@@ -103,7 +103,7 @@ resource "aws_route53_record" "custom-url-a" {
   }
 }
 
-resource "aws_route53_record" "custom-url-4a" {
+resource "aws_route53_record" "custom_url_4a" {
   name    = var.site_url
   type    = "AAAA"
   zone_id = var.hosted_zone_id
@@ -130,6 +130,15 @@ resource "aws_s3_bucket" "website" {
     }
   }
 
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        sse_algorithm = "aws:kms"
+        kms_master_key_id = var.encryption_key_id
+      }
+    }
+  }
+
   dynamic "cors_rule" {
     for_each = var.cors_rules
     content {
@@ -151,6 +160,23 @@ data "aws_iam_policy_document" "static_website" {
     principals {
       identifiers = [aws_cloudfront_origin_access_identity.oai.iam_arn]
       type        = "AWS"
+    }
+  }
+
+  statement {
+    effect = "Deny"
+    actions = ["s3:GetObject"]
+    resources = ["${aws_s3_bucket.website.arn}/*"]
+
+    condition {
+      test = "Bool"
+      values = ["false"]
+      variable = "aws:SecureTransport"
+    }
+
+    principals {
+      identifiers = ["*"]
+      type = "*"
     }
   }
 }
