@@ -119,11 +119,6 @@ resource "aws_s3_bucket" "website" {
   bucket = var.s3_bucket_name
   tags   = var.tags
 
-  website {
-    index_document = var.index_doc
-    error_document = var.error_doc
-  }
-
   lifecycle_rule {
     enabled                                = true
     abort_incomplete_multipart_upload_days = 10

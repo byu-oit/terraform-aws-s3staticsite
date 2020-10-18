@@ -32,7 +32,6 @@ module "s3_site" {
 | ---------------------- | ----------- | --------------------------------------------------------------------------------- | -------------- |
 | hosted_zone_id         | string      | Hosted Zone ID                                                                    |
 | index_doc              | string      | The index document of the site.                                                   | index.html     |
-| error_doc              | string      | The error document (e.g. 404 page) of the site.                                   | index.html     |
 | site_url               | string      | The URL for the site.                                                             |
 | wait_for_deployment    | string      | Define if Terraform should wait for the distribution to deploy before completing. | `true`         |
 | s3_bucket_name         | string      | Name of S3 bucket for the website                                                 |
