@@ -32,14 +32,14 @@ module "s3_site" {
 | ---------------------- | ------------ | --------------------------------------------------------------------------------- | -------------- |
 | hosted_zone_id         | string       | Hosted Zone ID                                                                    |
 | index_doc              | string       | The index document of the site.                                                   | index.html     |
-| encryption_key_id      | string       | The AWS KMS master key ID used for the SSE-KMS encryption                         | 
+| encryption_key_id      | string       | The AWS KMS master key ID used for the SSE-KMS encryption                         | `aws/s3`
 | site_url               | string       | The URL for the site.                                                             |
-| wait_for_deployment    | string       | Define if Terraform should wait for the distribution to deploy before completing. | `true`         |
+| wait_for_deployment    | bool         | Define if Terraform should wait for the distribution to deploy before completing. | `true`         |
 | s3_bucket_name         | string       | Name of S3 bucket for the website                                                 |
 | tags                   | map(string)  | A map of AWS Tags to attach to each resource created                              | {}             |
 | cloudfront_price_class | string       | The price class for the cloudfront distribution                                   | PriceClass_100 |
 | cors_rules             | list(object) | The CORS policies for S3 bucket                                                   | []             |
-| log_cookies            | bool         | Include cookies in the CloudFront access logs.                                    |                |
+| log_cookies            | bool         | Include cookies in the CloudFront access logs.                                    | false          |
 ## Outputs
 | Name            | Type                                                                                                     | Description                                             |
 | --------------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |

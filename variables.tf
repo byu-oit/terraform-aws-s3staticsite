@@ -16,7 +16,7 @@ variable "site_url" {
 }
 
 variable "wait_for_deployment" {
-  type        = string
+  type        = bool
   description = "Define if Terraform should wait for the distribution to deploy before completing."
   default     = true
 }
