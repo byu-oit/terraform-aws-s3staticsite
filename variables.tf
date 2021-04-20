@@ -32,6 +32,12 @@ variable "s3_bucket_name" {
   description = "Name of S3 bucket for website"
 }
 
+variable "s3_log_bucket_name" {
+  type        = string
+  description = "Name of the S3 bucket for website logs"
+  default     = var.site_url
+}
+
 variable "tags" {
   type        = map(string)
   description = "A map of AWS Tags to attach to each resource created"
