@@ -204,7 +204,7 @@ resource "aws_s3_bucket_policy" "static_website_read" {
 }
 
 resource "aws_s3_bucket" "logging" {
-  bucket        = "${var.site_url}-access-logs"
+  bucket        = "${var.s3_bucket_name}-access-logs"
   tags          = var.tags
   force_destroy = var.force_destroy
 
