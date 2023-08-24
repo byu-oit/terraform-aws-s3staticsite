@@ -84,3 +84,10 @@ variable "waf_acl_arn" {
   default     = ""
   description = "The ARN of the WAF that should front the CloudFront distribution."
 }
+
+
+variable "cloudfront_function_arn" {
+  type        = string
+  default     = ""
+  description = "The ARN of a CloudFront distribution function."
+}

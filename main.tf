@@ -114,6 +114,14 @@ resource "aws_cloudfront_distribution" "cdn" {
       }
     }
     viewer_protocol_policy = "redirect-to-https"
+
+    dynamic "function_association" {
+      for_each = var.cloudfront_function_arn != "" ? [1] : []
+      content {
+        event_type   = "viewer-request"
+        function_arn = var.cloudfront_function_arn
+      }
+    }
   }
 
   restrictions {
