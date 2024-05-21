@@ -48,6 +48,8 @@ module "s3_site" {
 | log_cookies            | bool         | Include cookies in the CloudFront access logs.                                   | `false`        |
 | force_destroy          | bool         | Destroy site buckets even if they're not empty on a `terraform destroy` command. | `false`        |
 | waf_acl_arn            | string       | The ARN of the WAF that should front the CloudFront distribution.                |                |
+| cloudfront_function_arn | string      | The ARN of the CloudFront function to attach to the distribution.                | *Empty string* |
+| cloudfront_function_event_type | string | The event type that should trigger the CloudFront function.                      | viewer-request |
 
 ## Outputs
 | Name            | Type                                                                                                     | Description                                             |
