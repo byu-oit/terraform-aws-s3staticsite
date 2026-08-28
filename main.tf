@@ -116,6 +116,29 @@ resource "aws_cloudfront_distribution" "cdn" {
     viewer_protocol_policy = "redirect-to-https"
   }
 
+  dynamic "ordered_cache_behavior" {
+    for_each = var.ordered_cache_behaviors
+
+    content {
+      path_pattern               = ordered_cache_behavior.value.path_pattern
+      target_origin_id           = aws_s3_bucket.website.bucket
+      allowed_methods            = ["GET", "HEAD"]
+      cached_methods             = ["GET", "HEAD"]
+      min_ttl                    = ordered_cache_behavior.value.min_ttl
+      default_ttl                = ordered_cache_behavior.value.default_ttl
+      max_ttl                    = ordered_cache_behavior.value.max_ttl
+      response_headers_policy_id = ordered_cache_behavior.value.response_headers_policy_id
+
+      forwarded_values {
+        query_string = var.forward_query_strings
+        cookies {
+          forward = "none"
+        }
+      }
+      viewer_protocol_policy = "redirect-to-https"
+    }
+  }
+
   restrictions {
     geo_restriction {
       restriction_type = "none"
