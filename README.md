@@ -22,7 +22,7 @@ module "s3_site" {
 }
 ```
 
-To customize caching and response headers for a subset of files, provide ordered cache behaviors referencing an existing CloudFront response headers policy:
+To customize caching for a subset of files, provide ordered cache behaviors:
 
 ```hcl
 ordered_cache_behaviors = [
@@ -31,7 +31,8 @@ ordered_cache_behaviors = [
     min_ttl                    = 0
     default_ttl                = 3600
     max_ttl                    = 86400
-    response_headers_policy_id = aws_cloudfront_response_headers_policy.assets.id
+    # This field is required; set it to null when no response headers policy is desired.
+    response_headers_policy_id = null
   }
 ]
 ```
