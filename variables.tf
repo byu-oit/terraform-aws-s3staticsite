@@ -50,6 +50,18 @@ variable "cloudfront_price_class" {
   default     = "PriceClass_100"
 }
 
+variable "ordered_cache_behaviors" {
+  type = list(object({
+    path_pattern               = string
+    min_ttl                    = number
+    default_ttl                = number
+    max_ttl                    = number
+    response_headers_policy_id = string
+  }))
+  description = "Ordered CloudFront cache behaviors for specific path patterns."
+  default     = []
+}
+
 variable "hosted_zone_id" {
   type        = string
   description = "hosted zone id"

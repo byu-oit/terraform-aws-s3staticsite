@@ -12,7 +12,7 @@ This Terraform module deploys an S3-hosted static site with HTTPS enabled.
 ## Usage
 ```hcl
 module "s3_site" {
-  source    = "github.com/byu-oit/terraform-aws-s3staticsite?ref=v7.0.3"
+  source    = "github.com/byu-oit/terraform-aws-s3staticsite?ref=v7.1.0"
   site_url       = "my-site.byu.edu"
   hosted_zone_id = "zoneid"
   s3_bucket_name = "bucket-name"
@@ -20,6 +20,21 @@ module "s3_site" {
     "tag" = "value"
   }
 }
+```
+
+To customize caching for a subset of files, provide ordered cache behaviors:
+
+```hcl
+ordered_cache_behaviors = [
+  {
+    path_pattern               = "assets/*"
+    min_ttl                    = 0
+    default_ttl                = 3600
+    max_ttl                    = 86400
+    # This field is required; set it to null when no response headers policy is desired.
+    response_headers_policy_id = null
+  }
+]
 ```
 
 > **Note**: Using this module will require you to run `terraform apply` twice. The first time it will create the Route 53 hosted zone, certificate in ACM, and S3 bucket for deployment. Then it will fail because AWS can't validate the certificate. You'll get an error message similar to the image below. Using [this form](https://support.byu.edu/it?id=sc_cat_item&sys_id=2f7a54251d635d005c130b6c83f2390a) or [Teams](https://teams.microsoft.com/l/channel/19%3a7221c80487644c478ceb3f3606d38b15%40thread.tacv2/CES%2520Network%2520Center?groupId=54688770-069e-42a2-9f77-07cbb0306d01&tenantId=c6fc6e9b-51fb-48a8-b779-9ee564b40413), ask the network team to set up a record in BlueCat for your desired subdomain name, pointing to the name servers of the hosted zone created by Terraform (which can be found in the Route 53 console). After AWS has validated the certificate (which you can see in the ACM console), run `terraform apply` again and it should succeed.
@@ -43,6 +58,7 @@ module "s3_site" {
 | s3_bucket_name         | string      | Name of S3 bucket for the website                                                 |                |
 | tags                   | map(string) | A map of AWS Tags to attach to each resource created                              | {}             |
 | cloudfront_price_class | string      | The price class for the cloudfront distribution                                   | PriceClass_100 |
+| ordered_cache_behaviors | list(object) | Ordered CloudFront cache behaviors for specific path patterns                     | []             |
 | cors_rules             | list(object) | The CORS policies for S3 bucket                                                  | []             |
 | forward_query_strings  | bool         | Forward query strings to the origin.                                             | `false`        |
 | log_cookies            | bool         | Include cookies in the CloudFront access logs.                                   | `false`        |
